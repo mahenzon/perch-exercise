@@ -1,6 +1,6 @@
 import operator
 from dataclasses import dataclass
-from typing import Union, Tuple, Sequence
+from typing import Union, Tuple, Sequence, Callable
 
 from exceptions import InvalidExpression, InvalidOperator
 
@@ -15,7 +15,7 @@ OperandType = Union[int, float, AcceptedExpressionType]
 @dataclass
 class Expression:
     operand1: OperandType
-    operator: str
+    operator: Union[str, Callable]
     operand2: OperandType
 
 
@@ -98,6 +98,11 @@ class Solver:
         and then solves expression
 
         >>> assert Solver.solve([1, "plus", 2]) == 3
+        >>> assert Solver.solve([1, "plus", 2]) == 3
+
+        >>> assert Solver.solve(Expression(1, Solver.PLUS, 2)) == 3
+
+        >>> assert Solver.solve([5, "times", [12, "divide", [1, "plus", 2]]]) == 20
 
         :param expression:
         :return:
